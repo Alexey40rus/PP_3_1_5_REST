@@ -1,4 +1,5 @@
 package ru.kata.spring.boot_security.demo.controllers;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,24 +9,24 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
 
-@org.springframework.web.bind.annotation.RestController
-@RequestMapping("/api")
-public class RestController {
+@RestController
+@RequestMapping("/api/admin")
+public class AdminRestController {
     private final UserService userService;
 
     @Autowired
-    public RestController(UserService userService) {
+    public AdminRestController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> showAllUser() {
+    public ResponseEntity<List<User>> AllUser() {
         List<User> user = userService.getAllUsers();
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable int id) {
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
         User user = userService.getById(id);
         return ResponseEntity.ok(user);
     }
