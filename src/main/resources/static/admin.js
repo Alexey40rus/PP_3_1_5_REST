@@ -18,7 +18,7 @@ function showUserPage() {
         .then(user => {
             userTable.innerHTML = `
                                 <td>${user.id}</td>
-                                <td>${user.username}</td>
+                                <td>${user.name}</td>
                                 <td>${user.email}</td>                                
                                 <td> ${user.roles.map(r => ' ' + r.name.replaceAll('ROLE_', ' '))}</td>
                                  `
@@ -70,7 +70,7 @@ function addNewUser() {
         method: 'POST',
 
         body: JSON.stringify({
-            name: $('#username').val(),
+            username: $('#username').val(),
             email: $('#email').val(),
             password: $('#password').val(),
             roles: [
@@ -81,7 +81,7 @@ function addNewUser() {
         $('form input[type="text"], form input[type="password"], form input[type="number"], form textarea')
             .val('')
     })
-    // refreshTableUsers();
+     refreshTableUsers();
 }
 
 
@@ -96,7 +96,7 @@ function editModal(id) {
         $('#idEdit').val(user.id);
         $('#usernameEdit').val(user.username);
         $('#emailEdit').val(user.email);
-        $('#passwordEdit').empty();
+        $('#passwordEdit').val(user.password);
         $('#roleEdit').val(user.role);
         $('#edit').attr('onclick', 'editUser(' + user.id + ')')
         $('#editModal').modal()
@@ -122,7 +122,7 @@ function editUser(id) {
             })
     }).then(() => {
         $('#editModal').modal()
-        // refreshTableUsers()
+        refreshTableUsers();
     })
 
 }
@@ -141,7 +141,7 @@ function deleteModal(id) {
         $('#emailDel').val(user.email);
         $('#roleDel').val(user.role);
         $('#delete').attr('onclick', 'deleteUser(' + user.id + ')')
-        $('#deleteModal').modal;
+        $('#deleteModal').modal('show'); // добавлен вызов метода 'show'
     }
 }
 
@@ -150,9 +150,8 @@ function deleteUser(id) {
         method: 'DELETE'
     }).then(() => {
         $('#deleteModalHtml').modal('hide')
-
     })
-    // refreshTableUsers();
+
 }
 
 refreshTableUsers();

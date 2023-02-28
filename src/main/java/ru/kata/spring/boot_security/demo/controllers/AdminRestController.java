@@ -26,7 +26,7 @@ public class AdminRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
+    public ResponseEntity<User> getUserById(@PathVariable("id") int id) {
         User user = userService.getById(id);
         return ResponseEntity.ok(user);
     }
@@ -42,7 +42,7 @@ public class AdminRestController {
         return ResponseEntity.ok(user);
     }
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable int id) {
+    public ResponseEntity<User> deleteUser(@PathVariable("id") int id) {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

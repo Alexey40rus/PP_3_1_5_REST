@@ -8,7 +8,6 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 
 @Controller
-@RequestMapping("/user")
 public class UserPageController {
 
     private final UserService userService;
@@ -18,7 +17,7 @@ public class UserPageController {
         this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping("/user")
     public String getUserPage() {
         return "user";
     }
