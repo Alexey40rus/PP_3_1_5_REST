@@ -18,7 +18,7 @@ function showUserPage() {
         .then(user => {
             userTable.innerHTML = `
                                 <td>${user.id}</td>
-                                <td>${user.name}</td>
+                                <td>${user.username}</td>
                                 <td>${user.email}</td>                                
                                 <td> ${user.roles.map(r => ' ' + r.name.replaceAll('ROLE_', ' '))}</td>
                                  `
@@ -33,61 +33,35 @@ showUserPage();
 function refreshTableUsers() {
     fetch('http://localhost:8080/api/admin')
         .then(response => response.json())
-        .then(result => refreshTable(result))
+        .then(result => refreshTable(result));
 }
-
 
 function refreshTable(users) {
-    let tBody = ''
-    $.each(users, function (key, object) {
-        let roles = ''
-        $.each(object.roles, function (k, o) {
-            roles += o.name + ' '
-        })
-        tBody += ('<tr>');
-        tBody += ('<td>' + object.id + '</td>');
-        tBody += ('<td>' + object.username + '</td>');
-        tBody += ('<td>' + object.email + '</td>');
-        tBody += ('<td>' + roles.replaceAll('ROLE_', ' ') + '</td>');
-        tBody += ('<td><button type="button" onclick="editModal(' + object.id + ')" ' +
-            'class="btn btn-primary">Edit</button></td>');
-        tBody += ('<td><button type="button" onclick="deleteModal(' + object.id + ')" ' +
-            'class="btn btn-danger">Delete</button></td>');
-        tBody += ('<tr>');
+    let tBody = '';
+    $.each(users, function(key, object) {
+        let roles = '';
+        $.each(object.roles, function(k, o) {
+            roles += o.name + ' ';
+        });
+        tBody += '<tr>';
+        tBody += '<td>' + object.id + '</td>';
+        tBody += '<td>' + object.username + '</td>';
+        tBody += '<td>' + object.email + '</td>';
+        tBody += '<td>' + roles.replaceAll('ROLE_', ' ') + '</td>';
+        tBody += '<td><button type="button" onclick="editModal(' + object.id + ')" ' +
+            'class="btn btn-primary">Edit</button></td>';
+        tBody += '<td><button type="button" onclick="deleteModal(' + object.id + ')" ' +
+            'class="btn btn-danger">Delete</button></td>';
+        tBody += '</tr>';
     });
     $('#usersTable').html(tBody);
-
-}
-
-//----- Новый пользователь -----
-
-function addNewUser() {
-    fetch('http://localhost:8080/api/admin', {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-
-        body: JSON.stringify({
-            username: $('#username').val(),
-            email: $('#email').val(),
-            password: $('#password').val(),
-            roles: [
-                document.getElementById('role').value
-            ]
-        })
-    }).then(() => {
-        $('form input[type="text"], form input[type="password"], form input[type="number"], form textarea')
-            .val('')
-    })
-     refreshTableUsers();
 }
 
 
 //----- Редактирование пользователя -----
 
 function editModal(id) {
+
     fetch('http://localhost:8080/api/admin/' + id)
         .then(response => response.json())
         .then(result => writeFields(result))
@@ -121,16 +95,16 @@ function editUser(id) {
                 ]
             })
     }).then(() => {
-        $('#editModal').modal()
+        $('#editModal').modal();
         refreshTableUsers();
     })
-
 }
 
 
 //----- Удаление пользователя -----
 
 function deleteModal(id) {
+
     fetch('http://localhost:8080/api/admin/' + id)
         .then(response => response.json())
         .then(result => writeFields(result))
@@ -143,15 +117,26 @@ function deleteModal(id) {
         $('#delete').attr('onclick', 'deleteUser(' + user.id + ')')
         $('#deleteModal').modal('show'); // добавлен вызов метода 'show'
     }
+    refreshTableUsers();
 }
 
 function deleteUser(id) {
     fetch('http://localhost:8080/api/admin/' + id, {
         method: 'DELETE'
-    }).then(() => {
-        $('#deleteModalHtml').modal('hide')
     })
-
-}
-
-refreshTableUsers();
+        .then(response => {
+            if (response.ok) {
+                console.log('Item delete');
+                const trDelete = document.querySelector(`#tr-${id}`);
+                trDelete.remove();
+                refreshTableUsers();
+            } else {
+                throw new Error('Ошибка удаления элемента');
+            }
+        })
+        .catch(error => console.error(error))
+        .finally(() => {
+            // выполните необходимые действия после удаления элемента
+        });
+} 
+refreshTableUsers()

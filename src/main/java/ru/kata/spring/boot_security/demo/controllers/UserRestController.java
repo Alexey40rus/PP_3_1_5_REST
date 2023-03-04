@@ -13,6 +13,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import java.security.Principal;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/user")
 public class UserRestController {
     private final UserService userService;

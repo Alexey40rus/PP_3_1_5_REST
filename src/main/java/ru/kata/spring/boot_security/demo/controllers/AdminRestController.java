@@ -10,6 +10,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/admin")
 public class AdminRestController {
     private final UserService userService;
