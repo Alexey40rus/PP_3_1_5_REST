@@ -22,5 +22,4 @@ function addNewUser() {
             .val('');
         refreshTableUsers();
     });
-
 }
